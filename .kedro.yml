@@ -1,0 +1,6 @@
+context_path: colibrimmo.run.ProjectContext
+project_name: "colibrimmo"
+project_version: "0.16.5"
+package_name: "colibrimmo"
+hooks:
+  - colibrimmo.hooks.project_hooks
