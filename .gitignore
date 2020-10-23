@@ -1,6 +1,9 @@
 ##########################
 # KEDRO PROJECT
 
+# ide
+.vscode/**
+
 # ignore all local configuration
 conf/local/**
 !conf/local/.gitkeep
@@ -149,6 +152,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+src/requirements.in
 
 # mkdocs documentation
 /site
