@@ -30,10 +30,13 @@
 from typing import Any, Dict, Iterable, Optional
 
 from kedro.config import ConfigLoader
+from kedro.config import TemplatedConfigLoader
 from kedro.framework.hooks import hook_impl
 from kedro.io import DataCatalog
 from kedro.pipeline import Pipeline
 from kedro.versioning import Journal
+from colibrimmo.pipelines import data_acquisition as da
+from colibrimmo.pipelines import kpis as kp
 
 
 class ProjectHooks:
@@ -45,11 +48,21 @@ class ProjectHooks:
             A mapping from a pipeline name to a ``Pipeline`` object.
 
         """
-        return {"__default__": Pipeline([])}
+        data_acquisition_pipeline = da.create_pipeline()
+        kpis_computation_pipeline = kp.create_pipeline()
+        return {
+            "da": data_acquisition_pipeline,
+            "kpis": kpis_computation_pipeline,
+            "__default__": data_acquisition_pipeline + kpis_computation_pipeline
+            }
 
     @hook_impl
     def register_config_loader(self, conf_paths: Iterable[str]) -> ConfigLoader:
-        return ConfigLoader(conf_paths)
+        return TemplatedConfigLoader(
+            conf_paths,
+            globals_pattern="*parameters.yml",
+            # globals_dict=os.environ
+        )
 
     @hook_impl
     def register_catalog(
