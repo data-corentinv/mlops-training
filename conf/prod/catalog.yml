@@ -16,11 +16,10 @@ sql-ads:
   table_name: ads
   load_args:
     index_col: [id]
-    schema: dev
+    schema: prod
   save_args:
     if_exists: replace
-    schema: dev
-
+    schema: prod
 
 kpis:
   type: pandas.CSVDataSet
