@@ -1,20 +1,21 @@
 from kedro.pipeline import Pipeline, node
 
-from .nodes import create_fake_appartement, update_ads
+from .nodes_ORM import update_ads
+# from .nodes import update_ads
 
 
 def create_pipeline(**kwargs):
     return Pipeline(
         [
+            # node(
+            #     update_ads,
+            #     ["ads"],
+            #     "sql-ads"
+            # ),
             node(
                 update_ads,
-                ["ads", "params:env"],
-                "sql-ads"
+                ["ads"],
+                "custom_ad"
             ),
-            # node(
-            #     create_fake_appartement,
-            #     ["params:iris_code", "params:parution_date", "params:description"],
-            #     "status",
-            # )
         ]
     )

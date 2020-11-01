@@ -10,6 +10,11 @@ ads:
   load_args: 
     nrows: 100
 
+custom_ad:
+  type: colibrimmo.extras.datasets.ads_dataset.AdsDataSet
+  credentials: db_admin
+  schema: local
+
 sql-ads:
   type: pandas.SQLTableDataSet
   credentials: db_admin
