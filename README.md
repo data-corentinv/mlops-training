@@ -1,28 +1,49 @@
-# colibrimmo
-
-## Overview
-
-This is your new Kedro project, which was generated using `Kedro 0.16.5`.
-
-Take a look at the [Kedro documentation](https://kedro.readthedocs.io) to get started.
-
-## Rules and guidelines
-
-In order to get the best out of the template:
-
-* Don't remove any lines from the `.gitignore` file we provide
-* Make sure your results can be reproduced by following a [data engineering convention](https://kedro.readthedocs.io/en/stable/11_faq/01_faq.html#what-is-data-engineering-convention)
-* Don't commit data to your repository
-* Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
-
-## How to install dependencies
-
-Declare any dependencies in `src/requirements.txt` for `pip` installation and `src/environment.yml` for `conda` installation.
-
-To install them, run:
-
-```
+# Colibrimmo
+## Setup
+Git clone this repository. The dependencies are declared in src/reqirements.txt you can install them using
+```bash
 kedro install
+```
+
+The configuration is divided into folders (one per environment : local, base, prod, ...). By default the pipeline will use local coniguration but you can specify configurations by environments. The priority will be given to the configuration from your environment over the local configuration.
+```
+conf
+└───local
+└───base
+└───prod
+```
+Create a credentials.yml in local folder
+```
+# credentials.yml
+cloud_sql:
+  username: <POSTGRESQL USERNAME>
+  password: <POSTGRESQL PASSWORD>
+
+gcp_service_account:
+  token: conf/local/service_account.json
+
+db_admin:
+  con: postgresql://postgres:postgres@localhost:5432
+  database: <NAME OF YOUR POSTGRESQL DATABASE>
+```
+
+Download a JSON key token from GCP service accounts (IAM) and copy it in conf/local as service_account.json. You can name it as you wish while the name is coherent with 
+
+## Proxy to Cloud SQL instance
+Download proxy at 
+https://cloud.google.com/sql/docs/postgres/sql-proxy
+```
+$ /cloud_sql_proxy -instances=yotta-mlops:europe-west1:group-1=tcp:5432
+```
+
+> *Note:* In *Kubernetes* the proxy is running as a sidecar
+docker image : gcr.io/cloudsql-docker/gce-proxy (see deployment/pod.yml)   
+
+## Secret and configmaps creation
+```
+$ kubectl create secret generic secret-group-1 --from-file=service_account.json=conf/local/service_account.json
+
+$kubectl create configmap conf-group-1 --from-file=conf/base/catalog.yml --from-file=conf/base/parameters.yml --from-file=conf/base/logging.yml --from-file=conf/base/credentials.yml
 ```
 
 ## How to run your Kedro pipeline
@@ -30,7 +51,10 @@ kedro install
 You can run your Kedro project with:
 
 ```
+# local environment
 kedro run
+# prod environment
+kedro run --env prod
 ```
 
 ## How to test your Kedro project
