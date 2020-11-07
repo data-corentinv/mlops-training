@@ -2,6 +2,7 @@ image: python:3.8
 
 stages:
   - test
+  - deploy
 
 test:
   stage: test
@@ -9,3 +10,11 @@ test:
     - pip install kedro==0.16.6
     - kedro install
     - kedro test
+
+environnement-test:
+  stage: deploy
+  script: 
+    - echo "$GITLAB_SERVICE_ACCOUNT_KEY"
+
+
+  
