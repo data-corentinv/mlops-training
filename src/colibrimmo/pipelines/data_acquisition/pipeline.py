@@ -1,11 +1,6 @@
 from kedro.pipeline import Pipeline, node
 
-<<<<<<< HEAD
-from .nodes_ORM import update_ads
-# from .nodes import update_ads
-=======
 from .nodes import update_tables
->>>>>>> develop
 
 
 def create_pipeline(**kwargs):
