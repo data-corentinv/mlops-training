@@ -1,7 +1,6 @@
-import logging
 import pandas as pd
 
 
-def update_ads(data: pd.DataFrame, env: str):
-    df_adds = data.loc[0:100]
-    return df_adds
+def update_tables(data: pd.DataFrame):
+    # for checking or cleaning data ?
+    return data
