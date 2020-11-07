@@ -33,6 +33,12 @@ zones-regions:
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/regions.csv
 
+custom_ad:
+  type: colibrimmo.extras.datasets.ads_dataset.AdsDataSet
+  credentials: db_admin
+  schema: prod
+
+
 sql-ads:
   type: pandas.SQLTableDataSet
   credentials: db_admin
