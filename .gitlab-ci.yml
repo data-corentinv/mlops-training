@@ -10,11 +10,18 @@ test:
     - pip install kedro==0.16.6
     - kedro install
     - kedro test
+  only:
+    - master
+    - staging
+    - develop
 
 environnement-test:
   stage: deploy
   script: 
     - echo "$GITLAB_SERVICE_ACCOUNT_KEY"
-
+  only:
+    - master
+    - staging
+    - develop
 
   
