@@ -46,6 +46,18 @@ $ kubectl create secret generic secret-group-1 --from-file=service_account.json=
 $kubectl create configmap conf-group-1 --from-file=conf/base/catalog.yml --from-file=conf/base/parameters.yml --from-file=conf/base/logging.yml --from-file=conf/base/credentials.yml
 ```
 
+## Build docker image
+
+```
+kedro docker build
+docker tag colibrimmo-group-1:latest eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
+docker push eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
+```
+
+```
+kubectl apply -f deployment/pod.yml
+kubectl exec -it colibrimmo-group-1 --container pipeline -- /bin/bash
+```
 ## How to run your Kedro pipeline
 
 You can run your Kedro project with:

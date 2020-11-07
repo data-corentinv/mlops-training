@@ -23,8 +23,3 @@ RUN chmod -R a+w /home/kedro
 EXPOSE 8888
 
 CMD ["kedro", "run"]
-
-# docker tag colibrimmo-group-1:latest eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
-# docker push eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
-# kubectl apply -f deployment/pod.yml
-# kubectl exec -it colibrimmo-group-1 --container pipeline -- /bin/bash
