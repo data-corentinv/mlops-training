@@ -6,7 +6,7 @@ Dockerfile
 .dockerignore
 
 # ignore all local configuration
-conf/local
+conf
 !conf/local/.gitkeep
 
 # ignore everything in the following folders

@@ -41,9 +41,9 @@ docker image : gcr.io/cloudsql-docker/gce-proxy (see deployment/pod.yml)
 
 ## Secret and configmaps creation
 ```
-$ kubectl create secret generic secret-group-1 --from-file=service_account.json=conf/local/service_account.json
+$ kubectl create secret generic secret-group-1 --from-file=service_account.json=conf/local/service_account.json --from-file=conf/local/credentials.yml
 
-$kubectl create configmap conf-group-1 --from-file=conf/base/catalog.yml --from-file=conf/base/parameters.yml --from-file=conf/base/logging.yml --from-file=conf/base/credentials.yml
+$ kubectl create configmap conf-group-1 --from-file=conf/base/catalog.yml --from-file=conf/base/parameters.yml --from-file=conf/base/logging.yml 
 ```
 
 ## Build docker image
