@@ -1,0 +1,18 @@
+kpis:
+  formula: price / carrez_surface
+  col_normalized: price_per_m2
+  aggs:
+    - median
+    - mean
+    - std
+    - count
+  user_rename_map: 
+    count: n_ads
+  fillna:
+    std: 0
+region: region_insee_code
+department: department_insee_code
+postal_code: postal_code
+city: city_insee_code
+iris: iris_insee_code
+

@@ -27,6 +27,7 @@
 # limitations under the License.
 
 """Project hooks."""
+import os
 from typing import Any, Dict, Iterable, Optional
 
 from kedro.config import ConfigLoader
@@ -61,7 +62,7 @@ class ProjectHooks:
         return TemplatedConfigLoader(
             conf_paths,
             globals_pattern="*parameters.yml",
-            # globals_dict=os.environ
+            globals_dict=os.environ
         )
 
     @hook_impl

@@ -28,6 +28,7 @@ spec:
         readOnly: true
     - name: pipeline
       image: eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
+      command: ["kedro", "run"]
       volumeMounts:
       - name: secret-group-1
         mountPath: "/home/kedro/conf/local/"
