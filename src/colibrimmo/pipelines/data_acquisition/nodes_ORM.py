@@ -10,7 +10,15 @@ def update_ads(data: pd.DataFrame) -> Ad:
     automatically when the pipeline is executed and it is time to run this node.
     """
     one_ad = data.iloc[0]
-    ad1 = Ad(iris_insee_code=one_ad['iris_insee_code'], parution_date=one_ad['parution_date'], price=one_ad['price'])
+    ad1 = Ad(
+        iris_insee_code=one_ad["iris_insee_code"],
+        parution_date=one_ad["parution_date"],
+        price=one_ad["price"],
+    )
     another_ad = data.iloc[1]
-    ad2 = Ad(iris_insee_code=another_ad['iris_insee_code'], parution_date=another_ad['parution_date'], price=another_ad['price'])
+    ad2 = Ad(
+        iris_insee_code=another_ad["iris_insee_code"],
+        parution_date=another_ad["parution_date"],
+        price=another_ad["price"],
+    )
     return [ad1, ad2]

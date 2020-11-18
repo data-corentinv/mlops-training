@@ -63,10 +63,10 @@ sql-ads:
     if_exists: replace
     schema: dev
 
-sql-custom_ad:
-  type: colibrimmo.extras.datasets.ads_dataset.AdsDataSet
-  credentials: db_admin
-  schema: local
+# sql-custom_ad:
+#   type: colibrimmo.extras.datasets.ads_dataset.AdsDataSet
+#   credentials: db_admin
+#   schema: local
 
 sql-zones-cities:
   type: pandas.SQLTableDataSet

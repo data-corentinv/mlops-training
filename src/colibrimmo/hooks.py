@@ -53,8 +53,8 @@ class ProjectHooks:
         return {
             "da": data_acquisition_pipeline,
             "kpis": kpis_computation_pipeline,
-            "__default__": data_acquisition_pipeline + kpis_computation_pipeline
-            }
+            "__default__": data_acquisition_pipeline + kpis_computation_pipeline,
+        }
 
     @hook_impl
     def register_config_loader(self, conf_paths: Iterable[str]) -> ConfigLoader:

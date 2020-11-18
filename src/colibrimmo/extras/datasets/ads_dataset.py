@@ -25,9 +25,9 @@ class AdsDataSet(AbstractDataSet):
         self.schema = schema
         Ad.__table__.schema = schema
         self.credentials = credentials
-        self.conn = self.credentials['con']
-        self.database = self.credentials['database']
-        self.engine = create_engine(self.conn+f'/{self.database}', echo=True)
+        self.conn = self.credentials["con"]
+        self.database = self.credentials["database"]
+        self.engine = create_engine(self.conn + f"/{self.database}", echo=True)
         create_postgres_namespace(self.engine, schema)
         Ad.metadata.create_all(self.engine)
 
@@ -50,7 +50,5 @@ class AdsDataSet(AbstractDataSet):
         """Returns a dict that describes the attributes of the dataset.
         """
         return dict(
-            schema=self.schema, 
-            database=self.database,
-            tables=Ad.metadata.tables
+            schema=self.schema, database=self.database, tables=Ad.metadata.tables
         )
