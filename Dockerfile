@@ -16,6 +16,9 @@ COPY . .
 RUN chown -R kedro:${KEDRO_GID} /home/kedro
 USER kedro
 RUN chmod -R a+w /home/kedro
+# ENV HTTP_PROXY=http://192.168.1.29:8000
+# for local test : ifconfig | grep 'inet 192'| awk '{ print $2}' give the adress of my mac = 192.168.1.29
+# for macOS : docker.for.mac.host.internal
+EXPOSE 5000
 
-EXPOSE 8888
-CMD ["kedro", "run"]
+CMD ["python", "flask_entry.py"]

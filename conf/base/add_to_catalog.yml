@@ -1,0 +1,39 @@
+# kpis_per_region:
+#   type: pandas.SQLTableDataSet
+#   credentials: db_admin
+#   table_name: kpis_per_region
+#   load_args:
+#     schema: dev
+#   save_args:
+#     if_exists: replace
+#     schema: dev
+
+# kpis_per_department:
+#   type: pandas.SQLTableDataSet
+#   credentials: db_admin
+#   table_name: kpis_per_region
+#   load_args:
+#     schema: dev
+#   save_args:
+#     if_exists: replace
+#     schema: dev
+
+# kpis_per_postal_code:
+#   type: pandas.SQLTableDataSet
+#   credentials: db_admin
+#   table_name: kpis_per_region
+#   load_args:
+#     schema: dev
+#   save_args:
+#     if_exists: replace
+#     schema: dev
+
+# kpis_per_cities:
+#   type: pandas.SQLTableDataSet
+#   credentials: db_admin
+#   table_name: kpis_per_region
+#   load_args:
+#     schema: dev
+#   save_args:
+#     if_exists: replace
+#     schema: dev

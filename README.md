@@ -33,7 +33,7 @@ Download a JSON key token from GCP service accounts (IAM) and copy it in conf/lo
 Download proxy at 
 https://cloud.google.com/sql/docs/postgres/sql-proxy
 ```
-$ /cloud_sql_proxy -instances=yotta-mlops:europe-west1:group-1=tcp:5432
+$ ./cloud_sql_proxy -instances=yotta-mlops:europe-west1:group-1=tcp:5432
 ```
 
 > *Note:* In *Kubernetes* the proxy is running as a sidecar
@@ -49,13 +49,21 @@ $ kubectl create configmap conf-group-1 --from-file=conf/base/catalog.yml --from
 ## Build docker image
 
 ```
-kedro docker build --image eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
+kedro docker build
+docker run --rm -p 5000:5000 colibrimmo-group-1:latest # test local
+docker tag colibrimmo-group-1:latest eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
 docker push eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
 ```
 
+
+
 ```
-kubectl apply -f deployment/pod.yml
+kubectl delete -f deployment/deployment.yml
+kubectl apply -f deployment/deployment.yml
 kubectl exec -it colibrimmo-group-1 --container pipeline -- /bin/bash
+kubectl apply -f deployment/service.yml
+kubectl get pods
+kubectl logs colibrimmo-group-1-b74b8c485-dwrgx --container pipeline
 ```
 ## How to run your Kedro pipeline
 
