@@ -4,7 +4,7 @@ from colibrimmo.infra.database import Base
 
 
 class Ad(Base):
-    __tablename__ = 'ads'
+    __tablename__ = "ads"
     id = Column(Integer, primary_key=True)
     parution_date = Column(Date)
     iris_insee_code = Column(Integer)

@@ -49,8 +49,7 @@ $ kubectl create configmap conf-group-1 --from-file=conf/base/catalog.yml --from
 ## Build docker image
 
 ```
-kedro docker build
-docker tag colibrimmo-group-1:latest eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
+kedro docker build --image eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
 docker push eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
 ```
 

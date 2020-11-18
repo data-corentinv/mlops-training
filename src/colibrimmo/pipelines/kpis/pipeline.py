@@ -4,12 +4,4 @@ from .nodes import compute_kpis
 
 
 def create_pipeline(**kwargs):
-    return Pipeline(
-        [
-            node(
-                compute_kpis,
-                ["sql-ads",],
-                "kpis",
-            )
-        ]
-    )
+    return Pipeline([node(compute_kpis, ["sql-ads",], "kpis",)])

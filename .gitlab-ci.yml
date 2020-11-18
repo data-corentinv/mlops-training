@@ -1,27 +1,58 @@
-image: python:3.8
+image: docker:19
+
+variables:
+  DOCKER_DRIVER: overlay
+
+services:
+  - docker:dind
+
+before_script:
+  - base64 -d "$GITLAB_SERVICE_ACCOUNT_KEY" | docker login -u _json_key --password-stdin https://eu.gcr.io
 
 stages:
   - test
+  - build
+  - push
   - deploy
 
 test:
+  image: python:3.8
   stage: test
-  script: 
-    - pip install kedro==0.16.6
+  before_script: 
+    - pip install -r src/requirements.txt
     - kedro install
+  script: 
     - kedro test
   only:
     - master
     - staging
     - develop
 
-environnement-test:
-  stage: deploy
+build-docker:
+  stage: build
+  variables: 
+    IMAGE_SHA_NAME: eu.gcr.io/yotta-mlops/colibrimmo-group-1:$CI_COMMIT_SHORT_SHA
+    IMAGE_BRANCH_NAME: eu.gcr.io/yotta-mlops/colibrimmo-group-1:$CI_COMMIT_BRANCH
   script: 
-    - echo "$GITLAB_SERVICE_ACCOUNT_KEY"
+    - docker build . -t $IMAGE_BRANCH_NAME -t $IMAGE_SHA_NAME
+    - docker push $IMAGE_BRANCH_NAME
+    - docker push $IMAGE_SHA_NAME
   only:
     - master
     - staging
     - develop
 
-  
+# tmp: continuous delivery
+# sed "s|{{TAG}}|$CI_COMMIT_SHORT_SHA|p" deployment/pod.yml > tmp_pod_{$CI_COMMIT_SHORT_SHA}.yaml  
+# deploy-kube-staging:
+#   image: dtzar/helm-kubectl:3.4.0
+#   stage: deploy
+#   script: 
+#     - echo warning:todo-kube-connexion
+#     - cd deployment
+#     - sed -i 's/__TAG__/'"$CI_COMMIT_SHORT_SHA"'/g; s/_VERSION_/'"$CI_COMMIT_TAG"'/g' pod.yml;
+#     - kubectl apply -f pod.yaml
+#   when: manual
+#   only: 
+#     - staging
+#     - master
