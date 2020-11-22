@@ -60,9 +60,7 @@ class ProjectHooks:
     @hook_impl
     def register_config_loader(self, conf_paths: Iterable[str]) -> ConfigLoader:
         return TemplatedConfigLoader(
-            conf_paths,
-            globals_pattern="*parameters.yml",
-            globals_dict=os.environ
+            conf_paths, globals_pattern="*parameters.yml", globals_dict=os.environ
         )
 
     @hook_impl
