@@ -8,8 +8,10 @@ kpis:
     - count
   user_rename_map: 
     count: n_ads
+  col_datetime: compute_datetime
   fillna:
     std: 0
+
 region: region_insee_code
 department: department_insee_code
 postal_code: postal_code
