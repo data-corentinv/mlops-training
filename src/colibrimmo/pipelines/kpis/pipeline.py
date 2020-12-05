@@ -1,6 +1,12 @@
 from kedro.pipeline import Pipeline, node
 
-from .nodes import normalize_measure, format_kpis, aggregate, merge_zone_ads
+from .nodes import (
+    normalize_measure,
+    format_kpis,
+    aggregate,
+    merge_zone_ads,
+    compute_datetime,
+)
 
 
 def create_pipeline(**kwargs):
@@ -8,63 +14,150 @@ def create_pipeline(**kwargs):
         [
             node(
                 merge_zone_ads,
-                ['sql-ads', 'sql-cities', 'sql-postalcodes', 'sql-insee', 'sql-departments', 'sql-regions'],
-                'merged_ads'
+                [
+                    "sql-ads",
+                    "sql-cities",
+                    "sql-postalcodes",
+                    "sql-insee",
+                    "sql-departments",
+                    "sql-regions",
+                ],
+                "merged_ads",
             ),
             node(
                 normalize_measure,
-                ['merged_ads', 'params:kpis.formula', 'params:kpis.col_normalized'],
-                'prices_per_m2'
+                ["merged_ads", "params:kpis.formula", "params:kpis.col_normalized"],
+                "prices_per_m2",
             ),
             node(
                 aggregate,
-                ['prices_per_m2', 'params:kpis.col_normalized', 'params:kpis.aggs', 'params:region'],
-                'price_per_region'
+                [
+                    "prices_per_m2",
+                    "params:kpis.col_normalized",
+                    "params:kpis.aggs",
+                    "params:region",
+                ],
+                "price_per_region",
+            ),
+            node(
+                compute_datetime,
+                ["price_per_region", "params:kpis.col_datetime"],
+                "price_per_region_with_datetime",
             ),
             node(
                 format_kpis,
-                ['price_per_region', 'params:kpis.col_normalized', 'params:kpis.aggs', 'params:kpis.user_rename_map', 'params:kpis.fillna'],
-                'kpis_per_region'
+                [
+                    "price_per_region_with_datetime",
+                    "params:kpis.col_normalized",
+                    "params:kpis.aggs",
+                    "params:kpis.user_rename_map",
+                    "params:kpis.fillna",
+                ],
+                "kpis_per_region",
             ),
             node(
                 aggregate,
-                ['prices_per_m2', 'params:kpis.col_normalized', 'params:kpis.aggs', 'params:department'],
-                'price_per_department'
+                [
+                    "prices_per_m2",
+                    "params:kpis.col_normalized",
+                    "params:kpis.aggs",
+                    "params:department",
+                ],
+                "price_per_department",
+            ),
+            node(
+                compute_datetime,
+                ["price_per_department", "params:kpis.col_datetime"],
+                "price_per_department_with_datetime",
             ),
             node(
                 format_kpis,
-                ['price_per_department', 'params:kpis.col_normalized', 'params:kpis.aggs', 'params:kpis.user_rename_map', 'params:kpis.fillna'],
-                'kpis_per_department'
+                [
+                    "price_per_department_with_datetime",
+                    "params:kpis.col_normalized",
+                    "params:kpis.aggs",
+                    "params:kpis.user_rename_map",
+                    "params:kpis.fillna",
+                ],
+                "kpis_per_department",
             ),
             node(
                 aggregate,
-                ['prices_per_m2', 'params:kpis.col_normalized', 'params:kpis.aggs', 'params:postal_code'],
-                'price_per_postal_code'
+                [
+                    "prices_per_m2",
+                    "params:kpis.col_normalized",
+                    "params:kpis.aggs",
+                    "params:postal_code",
+                ],
+                "price_per_postal_code",
+            ),
+            node(
+                compute_datetime,
+                ["price_per_postal_code", "params:kpis.col_datetime"],
+                "price_per_postal_code_with_datetime",
             ),
             node(
                 format_kpis,
-                ['price_per_postal_code', 'params:kpis.col_normalized', 'params:kpis.aggs', 'params:kpis.user_rename_map', 'params:kpis.fillna'],
-                'kpis_per_postal_code'
+                [
+                    "price_per_postal_code_with_datetime",
+                    "params:kpis.col_normalized",
+                    "params:kpis.aggs",
+                    "params:kpis.user_rename_map",
+                    "params:kpis.fillna",
+                ],
+                "kpis_per_postal_code",
             ),
             node(
                 aggregate,
-                ['prices_per_m2', 'params:kpis.col_normalized', 'params:kpis.aggs', 'params:city'],
-                'price_per_city'
+                [
+                    "prices_per_m2",
+                    "params:kpis.col_normalized",
+                    "params:kpis.aggs",
+                    "params:city",
+                ],
+                "price_per_city",
+            ),
+            node(
+                compute_datetime,
+                ["price_per_city", "params:kpis.col_datetime"],
+                "price_per_city_with_datetime",
             ),
             node(
                 format_kpis,
-                ['price_per_city', 'params:kpis.col_normalized', 'params:kpis.aggs', 'params:kpis.user_rename_map', 'params:kpis.fillna'],
-                'kpis_per_city'
+                [
+                    "price_per_city_with_datetime",
+                    "params:kpis.col_normalized",
+                    "params:kpis.aggs",
+                    "params:kpis.user_rename_map",
+                    "params:kpis.fillna",
+                ],
+                "kpis_per_city",
             ),
             node(
                 aggregate,
-                ['prices_per_m2', 'params:kpis.col_normalized', 'params:kpis.aggs', 'params:iris'],
-                'price_per_iris'
+                [
+                    "prices_per_m2",
+                    "params:kpis.col_normalized",
+                    "params:kpis.aggs",
+                    "params:iris",
+                ],
+                "price_per_iris",
+            ),
+            node(
+                compute_datetime,
+                ["price_per_iris", "params:kpis.col_datetime"],
+                "price_per_iris_with_datetime",
             ),
             node(
                 format_kpis,
-                ['price_per_iris', 'params:kpis.col_normalized', 'params:kpis.aggs', 'params:kpis.user_rename_map', 'params:kpis.fillna'],
-                'kpis_per_iris'
+                [
+                    "price_per_iris_with_datetime",
+                    "params:kpis.col_normalized",
+                    "params:kpis.aggs",
+                    "params:kpis.user_rename_map",
+                    "params:kpis.fillna",
+                ],
+                "kpis_per_iris",
             ),
         ]
     )
