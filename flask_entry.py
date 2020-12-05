@@ -1,9 +1,13 @@
 """Application entry point."""
+import mlflow
+import pandas as pd
+import json
 from pathlib import Path
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 from kedro.framework.context import load_context
 from src.colibrimmo.domain.service_utils import get_row
+
 
 app = Flask(__name__)
 
@@ -11,13 +15,16 @@ app = Flask(__name__)
 @app.before_first_request
 def load_model_to_app():
     app.context = load_context('./')
-    # app.predictor = load_model('./static/model/model.h5')
     app.kpis_per_region = app.context.catalog.load('kpis_per_region').set_index('region_insee_code')
     app.kpis_per_department = app.context.catalog.load('kpis_per_department').set_index('department_insee_code')
     app.kpis_per_postal_code = app.context.catalog.load('kpis_per_postal_code').set_index('postal_code')
     app.kpis_per_cities = app.context.catalog.load('kpis_per_city').set_index('city_insee_code')
     app.kpis_per_iris = app.context.catalog.load('kpis_per_iris').set_index('iris_insee_code')
-    
+    model_name = "simple model"
+    model_version = 1
+    app.model = mlflow.pyfunc.load_model(
+        model_uri=f"models:/{model_name}/{model_version}"
+    )
 
 # @app.route("/apartments/price")
 # def index():
@@ -53,11 +60,14 @@ def kpis_iris(iris_insee_code):
     kpi = get_row(app.kpis_per_iris, iris_insee_code, 'iris_insee_code')
     return kpi
 
-@app.route("/apartments/price/prediction")
+@app.route("/apartments/price/prediction", methods=['POST'])
 def predict():
-    mean = app.kpis_per_iris['price_per_m2_mean'].mean()
+    jsonfile = request.get_json()
+    data = pd.read_json(json.dumps(jsonfile),orient='index')
+    data = data.replace({'false': False, 'true': True}).T
+    pred = app.model.predict(data)
     return {
-        'price_per_m2_prediction': mean
+        'price_per_m2_prediction': pred[0]
     }   #render_template('index.html', pred=mean)
 
 @app.route("/apartments/price/prediction/model/performances")
