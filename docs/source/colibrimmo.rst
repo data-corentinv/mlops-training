@@ -13,6 +13,7 @@ Subpackages
 
     colibrimmo.extras
     colibrimmo.pipelines
+    colibrimmo.domain
 
 Submodules
 ----------
