@@ -20,27 +20,28 @@ ads:
   load_args: 
     dtype: 
       postal_code: str
-    nrows: 10000
+    nrows: 100
 
 zones-cities:
   type: pandas.CSVDataSet
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/cities.csv
   load_args: 
-    # nrows: 1000
+    nrows: 100
 
 zones-iris:
   type: pandas.CSVDataSet
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/iris.csv
   load_args: 
-    # nrows: 1000
+    nrows: 100
   
 zones-departments:
   type: pandas.CSVDataSet
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/departments.csv
   load_args: 
+    nrows: 100
     dtype: 
       postal_code: str
       region_insee_code: str
@@ -50,7 +51,7 @@ zones-insee:
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/insee_postal_code_association_table.csv
   load_args: 
-    # nrows: 100
+    nrows: 100
     dtype: 
       postal_code: str
 
@@ -59,7 +60,7 @@ zones-postal-codes: #postal_code
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/postal_codes.csv
   load_args: 
-    # nrows: 100
+    nrows: 100
     dtype: 
       postal_code: str
 
@@ -68,13 +69,13 @@ zones-regions:
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/regions.csv
   load_args: 
-    # nrows: 100
+    nrows: 100
     dtype: 
       insee_code: str
 
 sql-ads:
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/01_raw/ads/ads.csv
+  filepath: data/01_raw/ads/ads.csv
   load_args: 
     sep: ','
   save_args:
@@ -84,7 +85,7 @@ sql-ads:
 
 sql-cities:
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/01_raw/zones/cities.csv
+  filepath: data/01_raw/zones/cities.csv
   load_args: 
     sep: ','
   save_args:
@@ -94,7 +95,7 @@ sql-cities:
 
 sql-departments:
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/01_raw/zones/departments.csv
+  filepath: data/01_raw/zones/departments.csv
   load_args: 
     sep: ','
   save_args:
@@ -104,7 +105,7 @@ sql-departments:
 
 sql-insee: #insee_postal_code_association_table
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/01_raw/zones/insee_postal_code_association_table.csv
+  filepath: data/01_raw/zones/insee_postal_code_association_table.csv
   load_args: 
     sep: ','
   save_args:
@@ -114,7 +115,7 @@ sql-insee: #insee_postal_code_association_table
 
 sql-postalcodes: #postal_code
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/01_raw/zones/postal_codes.csv
+  filepath: data/01_raw/zones/postal_codes.csv
   load_args: 
     sep: ','
   save_args:
@@ -124,7 +125,7 @@ sql-postalcodes: #postal_code
 
 sql-regions: 
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/01_raw/zones/regions.csv
+  filepath: data/01_raw/zones/regions.csv
   load_args: 
     sep: ','
   save_args:
@@ -134,7 +135,7 @@ sql-regions:
 
 sql-iris:
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/01_raw/zones/iris.csv
+  filepath: data/01_raw/zones/iris.csv
   load_args:
     schema: ','
   save_args:
@@ -144,7 +145,7 @@ sql-iris:
 
 kpis_per_region:
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/08_reporting/kpis_per_region.csv
+  filepath: data/08_reporting/kpis_per_region.csv
   save_args:
     index: False
     date_format: "%Y-%m-%dT%H:%M:%S%z"
@@ -152,7 +153,7 @@ kpis_per_region:
 
 kpis_per_department:
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/08_reporting/kpis_per_department.csv
+  filepath: data/08_reporting/kpis_per_department.csv
   save_args:
     index: False
     date_format: "%Y-%m-%dT%H:%M:%S%z"
@@ -160,7 +161,7 @@ kpis_per_department:
 
 kpis_per_postal_code:
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/08_reporting/kpis_per_postal_code.csv
+  filepath: data/08_reporting/kpis_per_postal_code.csv
   save_args:
     index: False
     date_format: "%Y-%m-%dT%H:%M:%S%z"
@@ -168,7 +169,7 @@ kpis_per_postal_code:
 
 kpis_per_city:
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/08_reporting/kpis_per_city.csv
+  filepath: data/08_reporting/kpis_per_city.csv
   save_args:
     index: False
     date_format: "%Y-%m-%dT%H:%M:%S%z"
@@ -176,7 +177,7 @@ kpis_per_city:
 
 kpis_per_iris:
   type: pandas.CSVDataSet
-  filepath: /Users/corentinvasseur/Desktop/FormationYotta/projet/gitlab/colibrimmo-group-1/data/08_reporting/kpis_per_iris.csv
+  filepath: data/08_reporting/kpis_per_iris.csv
   save_args:
     index: False
     decimal: .
