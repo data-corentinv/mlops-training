@@ -27,6 +27,7 @@ test:
     - master
     - staging
     - develop
+    - merge_requests
 
 build-docker:
   stage: build
