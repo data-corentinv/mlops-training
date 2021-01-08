@@ -10,21 +10,21 @@ ads:
   load_args: 
     dtype: 
       postal_code: str
-    nrows: 10000
+    nrows: 100000
 
 zones-cities:
   type: pandas.CSVDataSet
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/cities.csv
   load_args: 
-    # nrows: 1000
+    nrows: 10000
 
 zones-iris:
   type: pandas.CSVDataSet
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/iris.csv
   load_args: 
-    # nrows: 1000
+    nrows: 10000
   
 zones-departments:
   type: pandas.CSVDataSet
@@ -40,7 +40,7 @@ zones-insee:
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/insee_postal_code_association_table.csv
   load_args: 
-    # nrows: 100
+    nrows: 10000
     dtype: 
       postal_code: str
 
@@ -49,7 +49,7 @@ zones-postal-codes: #postal_code
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/postal_codes.csv
   load_args: 
-    # nrows: 100
+    nrows: 10000
     dtype: 
       postal_code: str
 
@@ -58,16 +58,67 @@ zones-regions:
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/regions.csv
   load_args: 
-    # nrows: 100
+    nrows: 10000
     dtype: 
       insee_code: str
+
+sql-ads-raw:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: ads-raw
+  load_args:
+    schema: dev
+  save_args:
+    if_exists: replace
+    schema: dev
 
 sql-ads:
   type: pandas.SQLTableDataSet
   credentials: db_admin
   table_name: ads
   load_args:
-    index_col: [id]
+#    index_col: [id]
+    schema: dev
+  save_args:
+    if_exists: replace
+    schema: dev
+
+sql-ads-clean:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: ads-clean
+  load_args:
+#    index_col: [id]
+    schema: dev
+  save_args:
+    if_exists: replace
+    schema: dev
+
+sql-inputs-model:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: input-model
+  load_args:
+    schema: dev
+  save_args:
+    if_exists: replace
+    schema: dev
+
+sql-training-set:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: training-set
+  load_args:
+    schema: dev
+  save_args:
+    if_exists: replace
+    schema: dev
+
+sql-testing-set:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: testing-set
+  load_args:
     schema: dev
   save_args:
     if_exists: replace

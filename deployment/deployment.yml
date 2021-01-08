@@ -37,6 +37,11 @@ spec:
         - name: pipeline
           image: eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
           command: ["python", "flask_entry.py"]
+          env:
+          - name: MLFLOW_TRACKING_URI
+            value: "http://34.77.161.208:5000"
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: "conf/local/service_account.json"
           ports:
           - containerPort: 5000
             protocol: TCP

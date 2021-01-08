@@ -12,4 +12,5 @@ Subpackages
 .. toctree::
 
     colibrimmo.extras.datasets
+    colibrimmo.extras.great_expectations
 

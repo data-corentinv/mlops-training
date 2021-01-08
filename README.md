@@ -29,6 +29,10 @@ db_admin:
 
 Download a JSON key token from GCP service accounts (IAM) and copy it in conf/local as service_account.json. You can name it as you wish while the name is coherent with 
 
+## Link to documentation of project
+
+[Documentation](https://yotta-academy.gitlab.io/mlops-track/project/fall-2020/colibrimmo-group-1/index.html)
+
 ## Proxy to Cloud SQL instance
 Download proxy at 
 https://cloud.google.com/sql/docs/postgres/sql-proxy
@@ -41,9 +45,14 @@ docker image : gcr.io/cloudsql-docker/gce-proxy (see deployment/pod.yml)
 
 ## Secret and configmaps creation
 ```
+
+$ kubectl delete secret secret-group-1
+
 $ kubectl create secret generic secret-group-1 --from-file=service_account.json=conf/local/service_account.json --from-file=conf/local/credentials.yml
 
-$ kubectl create configmap conf-group-1 --from-file=conf/base/catalog.yml --from-file=conf/base/parameters.yml --from-file=conf/base/logging.yml 
+$ kubectl delete configmap conf-group-1
+
+$ kubectl create configmap conf-group-1 --from-file=conf/base/catalog.yml --from-file=conf/base/parameters.yml --from-file=conf/base/logging.yml --from-file=conf/kubernetes_config.json
 ```
 
 ## Build docker image
@@ -58,12 +67,29 @@ docker push eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
 
 
 ```
-kubectl delete -f deployment/deployment.yml
 kubectl apply -f deployment/deployment.yml
-kubectl exec -it colibrimmo-group-1 --container pipeline -- /bin/bash
+
+kubectl delete -f deployment/deployment_test.yml
+kubectl apply -f deployment/deployment_test.yml
+
+kubectl exec -it colibrimmo-group-1-77fd7d794-pbp4p --container pipeline -- /bin/bash
 kubectl apply -f deployment/service.yml
 kubectl get pods
 kubectl logs colibrimmo-group-1-b74b8c485-dwrgx --container pipeline
+
+kubectl apply -f deployment/data_acquisition.yml
+kubectl apply -f deployment/model_training.yml
+kubectl delete -f deployment/model_training.yml
+
+kubectl logs train-model-price-group-1-tsdrc --container pipeline
+
+mlflow run 
+$ mlflow run . -e split
+$ mlflow run . -e split --backend kubernetes --backend-config conf/kubernetes_config.json
+$ mlflow run . --backend kubernetes --backend-config conf/kubernetes_config.json
+
+without mlflow run
+$ kubectl apply -f deployment/model_job_spec.yaml
 ```
 ## How to run your Kedro pipeline
 

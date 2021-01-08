@@ -18,3 +18,23 @@ postal_code: postal_code
 city: city_insee_code
 iris: iris_insee_code
 
+ads_cleaning: 
+  price_extrem_value: 3e6
+  nb_std: 3
+
+preprocessing:
+  price_method: median
+  keys: [id,city_insee_code]
+
+model:
+  col_date: parution_date
+  target : price
+  n_estimators: 130
+  max_depth: 11
+  criterion: 'mse'
+  split_train: 0.80
+  boolean_features: [has_terrace, has_swimming_pool, has_chimney, has_elevator, is_duplex] #has_balcony
+  categories: [apartment_type, energetic_performance_diagnostic_code] #construction_year, orientation, heating_type
+  numericals: [price_per_m2, carrez_surface] #n_bedrooms
+
+
