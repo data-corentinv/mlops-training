@@ -7,11 +7,12 @@ spec:
   selector:
     matchLabels:
       name: colibrimmo-group-1
+      version: __BRANCHNAME__
   template:
     metadata:
       labels:
         name: colibrimmo-group-1
-        version: v1
+        version: __BRANCHNAME__
     spec:
       volumes:
         - name: secret-group-1
@@ -35,7 +36,7 @@ spec:
             mountPath: /secrets/cloudsql
             readOnly: true
         - name: pipeline
-          image: eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
+          image: eu.gcr.io/yotta-mlops/colibrimmo-group-1:__TAG__
           command: ["python", "flask_entry.py"]
           env:
           - name: MLFLOW_TRACKING_URI
