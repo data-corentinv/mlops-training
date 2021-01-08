@@ -12,8 +12,9 @@ Subpackages
 .. toctree::
 
     colibrimmo.extras
-    colibrimmo.pipelines
     colibrimmo.domain
+    colibrimmo.infra
+    colibrimmo.pipelines
 
 Submodules
 ----------

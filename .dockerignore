@@ -15,6 +15,9 @@ logs
 notebooks
 references
 results
+mlruns
+mlflow
+great_expectations
 
 # except the following
 !logs/.gitkeep

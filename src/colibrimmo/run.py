@@ -29,6 +29,12 @@
 """Application entry point."""
 from pathlib import Path
 
+import sentry_sdk
+import logging.config
+from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.flask import FlaskIntegration
+from sentry_sdk.integrations.excepthook import ExcepthookIntegration
+
 from kedro.framework.context import KedroContext, load_package_context
 
 
@@ -36,6 +42,25 @@ class ProjectContext(KedroContext):
     """Users can override the remaining methods from the parent class here,
     or create new ones (e.g. as required by plugins)
     """
+
+    def _setup_logging(self) -> None:
+        # Custom logging configuration here
+        conf_logging = self.config_loader.get("logging*", "logging*/**")
+        # push to sentry
+        sentry_sdk.init(
+            dsn=self._get_config_credentials()[
+                "sentry-sdk-dsn"
+            ],  # conf_logging['sentry-sdk-dsn']
+            environment=self.env,
+            integrations=[
+                LoggingIntegration(level=logging.INFO, event_level=logging.WARNING),
+                FlaskIntegration(),
+                ExcepthookIntegration(always_run=True),
+            ],
+            traces_sample_rate=1.0,
+        )
+
+        logging.config.dictConfig(conf_logging)
 
 
 def run_package():

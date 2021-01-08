@@ -38,12 +38,19 @@ To run the tests, run ``kedro test``.
 from pathlib import Path
 
 import pytest
-
+import logging.config
 from colibrimmo.run import ProjectContext
 
 
 @pytest.fixture
-def project_context():
+def project_context(monkeypatch):
+    def _mock_setup(self):
+        conf_logging = self.config_loader.get("logging*", "logging*/**")
+        logging.config.dictConfig(conf_logging)
+
+    # Application of the monkeypatch to replace Path.home
+    # with the behavior of mockreturn defined above.
+    monkeypatch.setattr(ProjectContext, "_setup_logging", _mock_setup)
     return ProjectContext(str(Path.cwd()))
 
 

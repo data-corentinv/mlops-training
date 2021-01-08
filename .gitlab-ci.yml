@@ -43,6 +43,20 @@ build-docker:
     - staging
     - develop
 
+pages:
+  image: python:3.8
+  stage: deploy
+  before_script: 
+    - pip install -r src/requirements.txt
+  script:
+    - kedro build-docs
+    - mv docs/build/html public
+  artifacts:
+      paths:
+      - public
+  only:
+    - master
+
 # tmp: continuous delivery
 # sed "s|{{TAG}}|$CI_COMMIT_SHORT_SHA|p" deployment/pod.yml > tmp_pod_{$CI_COMMIT_SHORT_SHA}.yaml  
 # deploy-kube-staging:
