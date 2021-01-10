@@ -96,10 +96,6 @@ class Preprocessing(BaseEstimator, TransformerMixin):
             - cast boolean features
         """
 
-        city_insee_code_unknown = set(X.city_insee_code.unique()) - set(
-            self.price_per_m2.keys()
-        )
-
         X = X.assign(
             **{
                 "price_per_m2": lambda df: df["city_insee_code"].map(
@@ -114,6 +110,26 @@ class Preprocessing(BaseEstimator, TransformerMixin):
             }
         )
 
+        price_nan = X.query("price_per_m2.isnull()")
+        if len(price_nan) == len(X):
+            logging.warning(
+                f"All of the city_insee_code in inputs are unknown (transform method in preprocessing)"
+            )
+            logging.info("fillna of price_per_m2 with a fixed value to make it useless to the model : 0")
+            X = X.fillna({'price_per_m2': 0})
+        elif len(price_nan) > 0:
+            logging.info(
+                f"{len(price_nan)} city_insee_code donot have price_per_m2 value: {price_nan.city_insee_code.unique()}"
+            )
+            logging.warning(
+                f"Some city_insee_code in inputs are unknown (transform method in preprocessing)"
+            )
+            logging.info("fillna of price_per_m2 with mean price_per_m2")
+            
+            price_per_m2_no_nan = X.query("price_per_m2 == price_per_m2")
+            mean_price_per_m2 = X.query("price_per_m2 == price_per_m2").price_per_m2.mean()
+            X = X.assign(price_per_m2=X.price_per_m2.fillna(X.price_per_m2.mean()))
+
         X = pd.concat(
             [
                 X.filter(items=self.boolean_features + self.categories).astype(int),
@@ -122,18 +138,6 @@ class Preprocessing(BaseEstimator, TransformerMixin):
             ],
             axis=1,
         )
-
-        # > log is city_insee_code_unknown
-        if len(city_insee_code_unknown) > 0:
-            logging.info(
-                f"{len(city_insee_code_unknown)} city_insee_code donot have price_per_m2 value: {city_insee_code_unknown}"
-            )
-            logging.warning(
-                f"Some city_insee_code in inputs are unknown (transform method in preprocessing)"
-            )
-            logging.info("fillna of price_per_m2 with mean price_per_m2")
-            X = X.assign(price_per_m2=X.price_per_m2.fillna(X.price_per_m2.mean()))
-
         return X
 
     def predict(self, X=None, y=None):
