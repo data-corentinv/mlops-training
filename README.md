@@ -51,10 +51,10 @@ $ kubectl delete secret secret-group-1
 $ kubectl create secret generic secret-group-1 --from-file=service_account.json=conf/local/service_account.json --from-file=conf/local/credentials.yml
 
 $ kubectl delete configmap conf-group-1-base
-$ kubectl create configmap conf-group-1-base --from-file=conf/base/catalog.yml --from-file=conf/base/parameters.yml --from-file=conf/base/logging.yml 
+$ kubectl create configmap conf-group-1-base --from-file=conf/base/catalog.yml --from-file=conf/base/parameters.yml --from-file=conf/base/logging.yml --from-file=conf/local/credentials.yml
 
 $ kubectl delete configmap conf-group-1-develop
-$ kubectl create configmap conf-group-1-develop --from-file=conf/develop/catalog.yml --from-file=conf/develop/parameters.yml --from-file=conf/develop/logging.yml 
+$ kubectl create configmap conf-group-1-develop --from-file=conf/develop/catalog.yml --from-file=conf/develop/parameters.yml --from-file=conf/develop/logging.yml --from-file=conf/local/credentials.yml
 
 $ kubectl delete configmap conf-group-1-master
 $ kubectl create configmap conf-group-1-master --from-file=conf/master/catalog.yml --from-file=conf/master/parameters.yml --from-file=conf/master/logging.yml 
@@ -111,7 +111,7 @@ You can run your Kedro project with:
 # local environment
 kedro run
 # prod environment
-kedro run --env prod
+kedro run --env master
 ```
 
 ## How to test your Kedro project
