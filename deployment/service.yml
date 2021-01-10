@@ -6,7 +6,7 @@ spec:
   type: LoadBalancer
   selector:
     name: colibrimmo-group-1
-    version: __BRANCHNAME__
+    environment : __BRANCHNAME__
   ports:
   - protocol: TCP
     port: 5000

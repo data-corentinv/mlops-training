@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: colibrimmo-group-1
+  name: colibrimmo-group-1-__BRANCHNAME__
 spec:
   replicas: 1
   selector:
     matchLabels:
       name: colibrimmo-group-1
-      version: __BRANCHNAME__
+      environment : __BRANCHNAME__
   template:
     metadata:
       labels:
         name: colibrimmo-group-1
-        version: __BRANCHNAME__
+        environment : __BRANCHNAME__
     spec:
       volumes:
         - name: secret-group-1
