@@ -1,4 +1,5 @@
 """Application entry point."""
+import logging
 import mlflow
 import pandas as pd
 import json
