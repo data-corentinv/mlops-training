@@ -4,6 +4,7 @@ import mlflow
 import pandas as pd
 import json
 from pathlib import Path
+from os.path import join
 from flask import Flask, jsonify, render_template, request
 from google.cloud import storage
 
@@ -33,9 +34,9 @@ def load_model_to_app():
 # def index():
 #     return render_template('index.html', pred=0)
 
-# @app.route("/")
-# def hello_world():
-#     return 'hello world'
+@app.route("/")
+def hello_world():
+    return 'hello world'
 
 # @app.route("/data_doc")
 # def data_doc():
@@ -44,27 +45,27 @@ def load_model_to_app():
 @app.route("/regions/<region_insee_code>/price")
 def kpis_regions(region_insee_code):
     kpi = get_row(app.kpis_per_region, region_insee_code, 'region_insee_code')
-    return kpi
+    return jsonify(kpi)
 
 @app.route("/departments/<department_insee_code>/price")
 def kpis_departments(department_insee_code):
     kpi = get_row(app.kpis_per_department, department_insee_code, 'department_insee_code')
-    return kpi
+    return jsonify(kpi)
 
 @app.route("/postal_codes/<postal_code>/price")
 def kpis_postal_codes(postal_code):
     kpi = get_row(app.kpis_per_postal_code, postal_code, 'postal_code')
-    return kpi
+    return jsonify(kpi)
 
 @app.route("/cities/<city_insee_code>/price")
 def kpis_cities(city_insee_code):
     kpi = get_row(app.kpis_per_cities, city_insee_code, 'city_insee_code')
-    return kpi
+    return jsonify(kpi)
 
 @app.route("/iris/<iris_insee_code>/price")
 def kpis_iris(iris_insee_code):
     kpi = get_row(app.kpis_per_iris, iris_insee_code, 'iris_insee_code')
-    return kpi
+    return jsonify(kpi)
 
 @app.route("/apartments/price/prediction", methods=['POST'])
 def predict():
@@ -84,20 +85,25 @@ def link_mlflow_ui():
         'url': 'https://mlflow/dashboard/run....'
         }
 
-@app.route('/', defaults={'path': 'index.html'})
-@app.route('/<path:path>')
+@app.route('/datadoc', defaults={'path': 'index.html'}, endpoint="")
+@app.route('/expectations/<path:path>', endpoint='expectations')
+@app.route('/validations/<path:path>', endpoint='validations')
+# @app.route('/static/<path:path>', endpoint='static')
 def index(path):
     gcs = storage.Client()
     bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
     try:
-        blob = bucket.get_blob(path)
+        # import ipdb; ipdb.set_trace()
+        folder = request.endpoint
+        # path = path.lstrip('/')
+        blob = bucket.get_blob(join(folder, path))
         content = blob.download_as_string()
         if blob.content_encoding:
             resource = content.decode(blob.content_encoding)
         else:
             resource = content
     except Exception as e:
-        logging.exception("couldn't get blob")
+        # logging.exception("couldn't get blob")
         resource = "<p></p>"
     return resource
 @app.errorhandler(500)
