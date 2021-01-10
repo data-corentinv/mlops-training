@@ -39,6 +39,8 @@ spec:
           image: eu.gcr.io/yotta-mlops/colibrimmo-group-1:__TAG__
           command: ["python", "flask_entry.py"]
           env:
+          - name: ENVIRONMENT
+            value: "__BRANCHNAME__"
           - name: MLFLOW_TRACKING_URI
             value: "http://34.77.161.208:5000"
           - name: GOOGLE_APPLICATION_CREDENTIALS
