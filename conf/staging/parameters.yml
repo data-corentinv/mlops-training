@@ -39,4 +39,4 @@ model:
   mlflow_environment: staging
   mlflow_model_name: simple model
 
-
+artifacts_bucket: yotta-mlops-group-1-artifacts
