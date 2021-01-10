@@ -1,0 +1,235 @@
+# Here you can define all your data sets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://kedro.readthedocs.io/en/stable/05_data/01_data_catalog.html
+
+ads:
+  type: pandas.CSVDataSet
+  credentials: gcp_service_account
+  filepath: gs://yotta-mlops-data-source/ads/apartments_2020-10-11T16:17:26.148112.csv
+  load_args: 
+    dtype: 
+      postal_code: str
+    nrows: 100000
+
+zones-cities:
+  type: pandas.CSVDataSet
+  credentials: gcp_service_account
+  filepath: gs://yotta-mlops-data-source/zones/cities.csv
+  load_args: 
+    nrows: 10000
+
+zones-iris:
+  type: pandas.CSVDataSet
+  credentials: gcp_service_account
+  filepath: gs://yotta-mlops-data-source/zones/iris.csv
+  load_args: 
+    nrows: 10000
+  
+zones-departments:
+  type: pandas.CSVDataSet
+  credentials: gcp_service_account
+  filepath: gs://yotta-mlops-data-source/zones/departments.csv
+  load_args: 
+    dtype: 
+      postal_code: str
+      region_insee_code: str
+
+zones-insee:
+  type: pandas.CSVDataSet
+  credentials: gcp_service_account
+  filepath: gs://yotta-mlops-data-source/zones/insee_postal_code_association_table.csv
+  load_args: 
+    nrows: 10000
+    dtype: 
+      postal_code: str
+
+zones-postal-codes: #postal_code
+  type: pandas.CSVDataSet
+  credentials: gcp_service_account
+  filepath: gs://yotta-mlops-data-source/zones/postal_codes.csv
+  load_args: 
+    nrows: 10000
+    dtype: 
+      postal_code: str
+
+zones-regions:
+  type: pandas.CSVDataSet
+  credentials: gcp_service_account
+  filepath: gs://yotta-mlops-data-source/zones/regions.csv
+  load_args: 
+    nrows: 10000
+    dtype: 
+      insee_code: str
+
+sql-ads-raw:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: ads-raw
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+sql-ads:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: ads
+  load_args:
+#    index_col: [id]
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+sql-ads-clean:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: ads-clean
+  load_args:
+#    index_col: [id]
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+sql-inputs-model:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: input-model
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+sql-training-set:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: training-set
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+sql-testing-set:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: testing-set
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+sql-cities:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: cities
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+sql-iris:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: iris
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+  
+sql-departments:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: departments
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+  
+sql-insee:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: insee
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+sql-postalcodes:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: postalcodes
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+sql-regions:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: regions
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+kpis_per_region:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: kpis_per_region
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+kpis_per_department:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: kpis_per_department
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+kpis_per_postal_code:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: kpis_per_postal_code
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+kpis_per_city:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: kpis_per_city
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
+
+kpis_per_iris:
+  type: pandas.SQLTableDataSet
+  credentials: db_admin
+  table_name: kpis_per_iris
+  load_args:
+    schema: staging
+  save_args:
+    if_exists: replace
+    schema: staging
