@@ -35,7 +35,7 @@ spec:
           - name: secret-group-1
             mountPath: "/home/kedro/conf/local/"
             readOnly: true
-          - name: conf-group-1
-            mountPath: "/home/kedro/conf/base/"
+          - name: conf-group-1-__BRANCHNAME__
+            mountPath: "/home/kedro/conf/__BRANCHNAME__/"
             readOnly: true
       restartPolicy: Never
