@@ -21,6 +21,9 @@ spec:
         - name: conf-group-1-__BRANCHNAME__
           configMap:
             name: conf-group-1-__BRANCHNAME__
+        - name: conf-group-1-base
+          configMap:
+            name: conf-group-1-base
       containers:
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.17
@@ -54,4 +57,7 @@ spec:
             readOnly: true
           - name: conf-group-1-__BRANCHNAME__
             mountPath: "/home/kedro/conf/__BRANCHNAME__/"
+            readOnly: true
+          - name: conf-group-1-base
+            mountPath: "/home/kedro/conf/base/"
             readOnly: true
