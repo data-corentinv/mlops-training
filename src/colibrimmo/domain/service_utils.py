@@ -6,7 +6,7 @@ def get_row(df: pd.DataFrame, key: str, col: str):
     """
     """
     try:
-        return df.loc[key].to_dict()
+        return df.loc[str(key)].astype('str').to_dict()
     except KeyError:
         return {"error": f"{key} not founded in {col}"}
 
