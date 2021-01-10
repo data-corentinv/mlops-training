@@ -66,8 +66,8 @@ deploy-kube:
     - gcloud config set container/cluster colibrimmo
     - gcloud config set compute/zone europe-west1-b
     - gcloud container clusters get-credentials colibrimmo --zone europe-west1-b
-    - sed -i 's/__TAG__/'"$CI_COMMIT_SHORT_SHA"'/g; s/__BRANCHNAME__/'"$CI_COMMIT_BRANCH"'/g' ./deployment/deployment.yml;
-    - sed -i 's/__TAG__/'"$CI_COMMIT_SHORT_SHA"'/g; s/__BRANCHNAME__/'"$CI_COMMIT_BRANCH"'/g' ./deployment/service.yml;
+    - sed -i "s/__TAG__/${CI_COMMIT_SHORT_SHA}/g; s/__BRANCHNAME__/${CI_COMMIT_BRANCH}/g" deployment/deployment.yml
+    - sed -i "s/__TAG__/${CI_COMMIT_SHORT_SHA}/g; s/__BRANCHNAME__/${CI_COMMIT_BRANCH}/g" deployment/service.yml
     - kubectl apply -f ./deployment/deployment.yml
     - kubectl apply -f ./deployment/service.yml
   when: manual
