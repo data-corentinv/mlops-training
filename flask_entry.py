@@ -3,6 +3,7 @@ import logging
 import mlflow
 import pandas as pd
 import json
+import os
 from pathlib import Path
 from os.path import join
 from flask import Flask, jsonify, render_template, request
@@ -14,11 +15,12 @@ from src.colibrimmo.domain.service_utils import get_row
 
 
 app = Flask(__name__)
-CLOUD_STORAGE_BUCKET = 'yotta-mlops-group-1-artifacts'
 
 @app.before_first_request
 def load_model_to_app():
-    app.context = load_context('./')
+    env = os.environ['ENVIRONMENT']
+    app.context = load_context('./', env=env)
+    app.CLOUD_STORAGE_BUCKET = app.context.params['artifacts_bucket']
     app.kpis_per_region = app.context.catalog.load('kpis_per_region').set_index('region_insee_code')
     app.kpis_per_department = app.context.catalog.load('kpis_per_department').set_index('department_insee_code')
     app.kpis_per_postal_code = app.context.catalog.load('kpis_per_postal_code').set_index('postal_code')
@@ -30,17 +32,9 @@ def load_model_to_app():
         model_uri=f"models:/{model_name}/{model_version}"
     )
 
-# @app.route("/apartments/price")
-# def index():
-#     return render_template('index.html', pred=0)
-
 @app.route("/")
 def hello_world():
     return 'hello world'
-
-# @app.route("/data_doc")
-# def data_doc():
-#     return render_template("data_docs/local_site/index.html")
 
 @app.route("/regions/<region_insee_code>/price")
 def kpis_regions(region_insee_code):
@@ -90,14 +84,11 @@ def link_mlflow_ui():
 @app.route('/datadoc', defaults={'path': 'index.html'}, endpoint="")
 @app.route('/expectations/<path:path>', endpoint='expectations')
 @app.route('/validations/<path:path>', endpoint='validations')
-# @app.route('/static/<path:path>', endpoint='static')
 def index(path):
     gcs = storage.Client()
-    bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
+    bucket = gcs.get_bucket(app.CLOUD_STORAGE_BUCKET)
     try:
-        # import ipdb; ipdb.set_trace()
         folder = request.endpoint
-        # path = path.lstrip('/')
         blob = bucket.get_blob(join(folder, path))
         content = blob.download_as_string()
         if blob.content_encoding:
