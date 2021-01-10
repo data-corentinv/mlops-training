@@ -18,9 +18,9 @@ spec:
         - name: secret-group-1
           secret:
             secretName: secret-group-1
-        - name: conf-group-1
+        - name: conf-group-1-__BRANCHNAME__
           configMap:
-            name: conf-group-1
+            name: conf-group-1-__BRANCHNAME__
       containers:
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.17
