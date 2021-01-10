@@ -24,8 +24,8 @@ def load_model_to_app():
     app.kpis_per_postal_code = app.context.catalog.load('kpis_per_postal_code').set_index('postal_code')
     app.kpis_per_cities = app.context.catalog.load('kpis_per_city').set_index('city_insee_code')
     app.kpis_per_iris = app.context.catalog.load('kpis_per_iris').set_index('iris_insee_code')
-    model_name = "simple model"
-    model_version = 'staging'
+    model_version = app.context.params['model']['mlflow_environment']
+    model_name = app.context.params['model']['mlflow_model_name']
     app.model = mlflow.sklearn.load_model(
         model_uri=f"models:/{model_name}/{model_version}"
     )
@@ -72,8 +72,10 @@ def predict():
     jsonfile = request.get_json()
     data = pd.read_json(json.dumps(jsonfile),orient='index')
     data = data.replace({'false': False, 'true': True}).T
-    data = data.astype({'construction_year': 'float64', 'carrez_surface': 'float64', 
-    'n_bedrooms': 'float64', 'has_balcony': 'bool', 'has_garden': 'bool', 'is_duplex': 'bool'})
+    data = data.astype({'city_insee_code': 'str', 'carrez_surface': 'float64', 
+    "has_terrace": "bool", "has_swimming_pool": "bool", "has_chimney": "bool", 
+    "has_elevator": "bool", "is_duplex": "bool", "apartment_type": "str",
+    "energetic_performance_diagnostic_code": "str","city_insee_code": "str"})
     pred = app.model.predict(data)
     return {
         'price_prediction': pred[0]

@@ -29,14 +29,14 @@ preprocessing:
 model:
   col_date: parution_date
   target : price
-  n_estimators: 130
+  n_estimators: 600
   max_depth: 11
   criterion: 'mse'
   split_train: 0.80
   boolean_features: [has_terrace, has_swimming_pool, has_chimney, has_elevator, is_duplex] #has_balcony
   categories: [apartment_type, energetic_performance_diagnostic_code] #construction_year, orientation, heating_type
   numericals: [price_per_m2, carrez_surface] #n_bedrooms
-  mlflow_environment: staging
+  mlflow_environment: production
   mlflow_model_name: simple model
 
 
