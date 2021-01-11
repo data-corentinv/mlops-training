@@ -20,6 +20,7 @@ spec:
       containers:
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          sidecar: true
           command: 
             - "/cloud_sql_proxy" 
             - "-instances=yotta-mlops:europe-west1:group-1=tcp:5432"
