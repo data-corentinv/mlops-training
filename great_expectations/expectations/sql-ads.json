@@ -1,0 +1,465 @@
+{
+  "data_asset_type": "Dataset",
+  "expectation_suite_name": "sql-ads",
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "max_value": 25000,
+        "min_value": 5000
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_table_column_count_to_equal",
+      "kwargs": {
+        "value": 61
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_table_columns_to_match_ordered_list",
+      "kwargs": {
+        "column_list": [
+          "id",
+          "parution_date",
+          "iris_insee_code",
+          "city_insee_code",
+          "postal_code",
+          "price",
+          "price_without_agency_fees",
+          "via_agency",
+          "buyer_pays_fees",
+          "seller_pays_fees",
+          "condominium_fees",
+          "land_fees",
+          "tenant_in_place",
+          "is_under_1948_law",
+          "is_auction",
+          "construction_year",
+          "habitation_type",
+          "total_surface",
+          "carrez_surface",
+          "terrace_surface",
+          "balcony_surface",
+          "garden_surface",
+          "cellar_surface",
+          "n_rooms",
+          "n_bedrooms",
+          "n_bathrooms",
+          "n_wcs",
+          "n_service_rooms",
+          "has_terrace",
+          "has_balcony",
+          "has_garden",
+          "has_parking",
+          "has_cellar",
+          "has_box",
+          "has_elevator",
+          "has_swimming_pool",
+          "has_intercom",
+          "has_chimney",
+          "heating_type",
+          "heating_nature",
+          "kitchen_nature",
+          "has_equipped_kitchen",
+          "has_double_glazing",
+          "orientation",
+          "has_great_view",
+          "energetic_performance_diagnostic_code",
+          "greenhouse_gaz_diagnostic_code",
+          "energetic_performance_diagnostic_value",
+          "greenhouse_gaz_diagnostic_value",
+          "is_senior_residence",
+          "is_student_residence",
+          "is_historical_monument",
+          "condition",
+          "is_platform",
+          "is_building",
+          "apartment_type",
+          "has_caretaker",
+          "floor",
+          "n_floors_building",
+          "is_duplex",
+          "is_souplex"
+        ]
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "construction_year",
+        "max_value": 2030,
+        "min_value": 1600
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_unique",
+      "kwargs": {
+        "column": "id"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "habitation_type",
+        "value_set": [
+          "apartment"
+        ]
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "price",
+        "max_value": 1000000000.0,
+        "min_value": 10000,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Prix total de l\u2019annonce.",
+            "variable cible \u00e0 pr\u00e9dire"
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "total_surface",
+        "max_value": 1000.0,
+        "min_value": 6
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "carrez_surface",
+        "max_value": 1000.0,
+        "min_value": 6
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "via_agency",
+        "value_set": [
+          true
+        ]
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Est ce que l\u2019annonce est g\u00e9r\u00e9e par une agence.",
+            "Tout le temps vrai ici"
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "buyer_pays_fees",
+        "value_set": [
+          true,
+          false
+        ]
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Vrai si c\u2019est l\u2019acheteur qui paye les frais d\u2019agence."
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "is_under_1948_law",
+        "value_set": [
+          true,
+          false
+        ]
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Indique si le bien est vendu avec le statut \u201cLoi de 1948\u201d, c\u2019est \u00e0 dire lou\u00e9 avec un loyer plafonn\u00e9.",
+            "cf https://www.service-public.fr/particuliers/vosdroits/F1219#:~:text=Les%20logements%20soumis%20%C3%A0%20la,%C3%A0%20la%20fin%20du%20bail."
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "land_fees",
+        "max_value": 5000.0,
+        "min_value": 0,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Montant de la taxe fonci\u00e8re"
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "condominium_fees",
+        "max_value": 10000.0,
+        "min_value": 0,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Montant des charges annuelles de co-propri\u00e9t\u00e9"
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "terrace_surface",
+        "max_value": 200.0,
+        "min_value": 0,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Surface de la terrasse en m2"
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "balcony_surface",
+        "max_value": 50,
+        "min_value": 0,
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Surface du balcon en m2"
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "heating_type",
+        "value_set": [
+          "individual",
+          "collective"
+        ]
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Type du chauffage : individuel vs collectif"
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "energetic_performance_diagnostic_code",
+        "value_set": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G"
+        ]
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Indice de performance \u00e9nerg\u00e9tique."
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "greenhouse_gaz_diagnostic_code",
+        "value_set": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G"
+        ]
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Indice de performance GES."
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "energetic_performance_diagnostic_value",
+        "max_value": 2000.0,
+        "min_value": 1,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Score de performance \u00e9nerg\u00e9tique.",
+            "Valeur num\u00e9rique."
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "condition",
+        "value_set": [
+          "refurbished",
+          "to_refresh",
+          "to_renovate",
+          "to_restore"
+        ]
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Etat g\u00e9n\u00e9ral du bien",
+            "refurbished : refait \u00e0 neuf",
+            "to_refresh : \u00e0 rafraichir",
+            "to_renovate : \u00e0 r\u00e9nover",
+            "to_restore : \u00e0 restaurer enti\u00e8rement"
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "apartment_type",
+        "value_set": [
+          "studio-T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5-or-higher",
+          "building",
+          "platform"
+        ]
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "floor",
+        "max_value": 100.0,
+        "min_value": 0
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "\u00e9tage de l\u2019appartement"
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "n_floors_building",
+        "max_value": 20,
+        "min_value": 0
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Taille de l\u2019appartement"
+          ],
+          "format": "markdown"
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex_list",
+      "kwargs": {
+        "column": "iris_insee_code",
+        "match_on": "any",
+        "regex_list": [
+          "\\d{9}",
+          "[0-4][A-C]\\d{7}"
+        ]
+      },
+      "meta": {
+        "notes": {
+          "content": [
+            "Les \u00eelots regroup\u00e9s pour l'information statistique sont des d\u00e9coupages infra-communaux, initi\u00e9s par l'Institut national de la statistique et des \u00e9tudes \u00e9conomiques. D\u00e9finis par l'INSEE en coop\u00e9ration avec les mairies, les IRIS sont en usage depuis 1999 dans la R\u00e9publique Fran\u00e7aise.",
+            "https://www.insee.fr/fr/metadonnees/definition/c1523"
+          ],
+          "format": "markdown"
+        }
+      }
+    }
+  ],
+  "meta": {
+    "citations": [
+      {
+        "batch_kwargs": {
+          "data_asset_name": null,
+          "datasource": "ads_great",
+          "query": "SELECT * FROM dev.ads"
+        },
+        "batch_markers": null,
+        "batch_parameters": null,
+        "citation_date": "20201204T230825.336540Z",
+        "comment": "New suite added via CLI"
+      }
+    ],
+    "great_expectations_version": "0.13.1"
+  }
+}

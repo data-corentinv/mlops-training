@@ -1,0 +1,18 @@
+name: colibrimmo-group-1
+
+# conda_env: src/base_environment.yml
+docker_env:
+   image: colibrimmo-group-1
+   environment: [["GOOGLE_APPLICATION_CREDENTIALS", "/home/kedro/conf/local/service_account.json"]]
+   # volumes: ["/Users/benoit/Documents/yotta_mlops/colibrimmo-group-1/conf:/home/kedro/conf"]
+
+entry_points:
+    split:
+        command: "kedro run --pipeline model --from-nodes to_remove --to-nodes split"
+    train:
+        command: "kedro run --pipeline model --node train"
+    performance:
+        command: "kedro run --pipeline model --node performance"
+    main:
+        command: "kedro run --pipeline model"
+    

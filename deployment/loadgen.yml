@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadgen
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: loadgen
+  template:
+    metadata:
+      labels:
+        app: loadgen
+    spec:
+      containers:
+        - name: loadgen
+          image: k8s.
+          args:
+          - /bin/sh
+          - -c
+          - while true; do wget -q -O http://104.199.50.193:5000/iris/781230102/price; done

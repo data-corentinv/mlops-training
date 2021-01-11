@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-group-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mlflow-group-1
+  template:
+    metadata:
+      labels:
+        name: mlflow-group-1
+        version: v1
+    spec:
+      volumes:
+        - name: secret-group-1
+          secret:
+            secretName: secret-group-1
+      containers:
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          command: 
+            - "/cloud_sql_proxy" 
+            - "-instances=yotta-mlops:europe-west1:group-1=tcp:5432"
+            - "-credential_file=/secrets/cloudsql/service_account.json"
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          volumeMounts:
+          - name: secret-group-1
+            mountPath: /secrets/cloudsql
+            readOnly: true
+        - name: mlflow
+          image: eu.gcr.io/yotta-mlops/mlflow-group-1:latest
+          env:
+          - name: ARTIFACT_ROOT
+            value: gs://yotta-mlops-group-1-artifacts/artifacts/
+          - name: BACKEND_URI
+            value: postgresql://postgres:postgres@localhost:5432/store
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: /var/secrets/service_account.json
+          volumeMounts:
+          - name: secret-group-1
+            mountPath: "/var/secrets/"
+            readOnly: true

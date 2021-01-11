@@ -1,9 +1,18 @@
 ##########################
 # KEDRO PROJECT
 
+# ide
+.vscode/**
+
+# mlflow
+mlruns/**
+!mlruns/0/meta.yaml
+
 # ignore all local configuration
 conf/local/**
 !conf/local/.gitkeep
+!conf/local/catalog.yml
+!conf/local/parameters.yml
 
 # ignore potentially sensitive credentials files
 conf/**/*credentials*
@@ -127,6 +136,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+notebooks/fig
 
 # IPython
 .ipython/profile_default/history.sqlite
@@ -149,6 +159,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+src/requirements.in
 
 # mkdocs documentation
 /site
