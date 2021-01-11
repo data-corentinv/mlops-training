@@ -1,36 +1,119 @@
-# colibrimmo
-
-## Overview
-
-This is your new Kedro project, which was generated using `Kedro 0.16.5`.
-
-Take a look at the [Kedro documentation](https://kedro.readthedocs.io) to get started.
-
-## Rules and guidelines
-
-In order to get the best out of the template:
-
-* Don't remove any lines from the `.gitignore` file we provide
-* Make sure your results can be reproduced by following a [data engineering convention](https://kedro.readthedocs.io/en/stable/11_faq/01_faq.html#what-is-data-engineering-convention)
-* Don't commit data to your repository
-* Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
-
-## How to install dependencies
-
-Declare any dependencies in `src/requirements.txt` for `pip` installation and `src/environment.yml` for `conda` installation.
-
-To install them, run:
-
-```
+# Colibrimmo
+## Setup
+Git clone this repository. The dependencies are declared in src/reqirements.txt you can install them using
+```bash
 kedro install
 ```
 
+The configuration is divided into folders (one per environment : local, base, prod, ...). By default the pipeline will use local coniguration but you can specify configurations by environments. The priority will be given to the configuration from your environment over the local configuration.
+```
+conf
+└───local
+└───base
+└───prod
+```
+Create a credentials.yml in local folder
+```
+# credentials.yml
+cloud_sql:
+  username: <POSTGRESQL USERNAME>
+  password: <POSTGRESQL PASSWORD>
+
+gcp_service_account:
+  token: conf/local/service_account.json
+
+db_admin:
+  con: postgresql://postgres:postgres@localhost:5432
+  database: <NAME OF YOUR POSTGRESQL DATABASE>
+```
+
+Download a JSON key token from GCP service accounts (IAM) and copy it in conf/local as service_account.json. You can name it as you wish while the name is coherent with 
+
+## Link to documentation of project
+
+[Documentation](https://yotta-academy.gitlab.io/mlops-track/project/fall-2020/colibrimmo-group-1/index.html)
+
+## Proxy to Cloud SQL instance
+Download proxy at 
+https://cloud.google.com/sql/docs/postgres/sql-proxy
+```
+$ ./cloud_sql_proxy -instances=yotta-mlops:europe-west1:group-1=tcp:5432
+```
+
+> *Note:* In *Kubernetes* the proxy is running as a sidecar
+docker image : gcr.io/cloudsql-docker/gce-proxy (see deployment/pod.yml)   
+
+## Secret and configmaps creation
+```
+
+$ kubectl delete secret secret-group-1
+
+$ kubectl create secret generic secret-group-1 --from-file=service_account.json=conf/local/service_account.json --from-file=conf/local/credentials.yml
+
+$ kubectl delete configmap conf-group-1-base
+$ kubectl create configmap conf-group-1-base --from-file=conf/base/catalog.yml --from-file=conf/base/parameters.yml --from-file=conf/base/logging.yml --from-file=conf/local/credentials.yml
+
+$ kubectl delete configmap conf-group-1-develop
+$ kubectl create configmap conf-group-1-develop --from-file=conf/develop/catalog.yml --from-file=conf/develop/parameters.yml --from-file=conf/develop/logging.yml --from-file=conf/local/credentials.yml
+
+$ kubectl delete configmap conf-group-1-master
+$ kubectl create configmap conf-group-1-master --from-file=conf/master/catalog.yml --from-file=conf/master/parameters.yml --from-file=conf/master/logging.yml 
+
+$ kubectl delete configmap conf-group-1-staging
+$ kubectl create configmap conf-group-1-staging --from-file=conf/staging/catalog.yml --from-file=conf/staging/parameters.yml --from-file=conf/staging/logging.yml 
+
+--from-file=conf/kubernetes_config.json
+
+
+```
+
+## Build docker image
+
+```
+kedro docker build
+docker run --rm -p 5000:5000 colibrimmo-group-1:latest # test local
+docker tag colibrimmo-group-1:latest eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
+docker push eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
+```
+
+
+
+```
+kubectl apply -f deployment/deployment.yml
+
+kubectl delete -f deployment/deployment_test.yml
+kubectl apply -f deployment/deployment_test.yml
+
+kubectl rollout restart deployment colibrimmo-group-1-staging 
+
+kubectl exec -it colibrimmo-group-1-77fd7d794-pbp4p --container pipeline -- /bin/bash
+kubectl apply -f deployment/service.yml
+kubectl get pods
+kubectl logs colibrimmo-group-1-b74b8c485-dwrgx --container pipeline
+
+kubectl apply -f deployment/data_acquisition.yml
+kubectl apply -f deployment/model_training.yml
+kubectl delete -f deployment/model_training.yml
+
+kubectl logs train-model-price-group-1-tsdrc --container pipeline
+
+mlflow run 
+$ mlflow run . -e split
+$ mlflow run . -e split --backend kubernetes --backend-config conf/kubernetes_config.json
+$ mlflow run . --backend kubernetes --backend-config conf/kubernetes_config.json
+
+without mlflow run
+$ kubectl apply -f deployment/model_job_spec.yaml
+```
 ## How to run your Kedro pipeline
 
 You can run your Kedro project with:
 
 ```
+# local environment
 kedro run
+# prod environment
+kedro run --env master
 ```
 
 ## How to test your Kedro project
