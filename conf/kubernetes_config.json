@@ -1,0 +1,5 @@
+{
+    "kube-context": "gke_yotta-mlops_europe-west1-b_colibrimmo",
+    "kube-job-template-path": "deployment/model_job_spec.yaml",
+    "repository-uri": "eu.gcr.io/yotta-mlops/colibrimmo-group-1"
+}
