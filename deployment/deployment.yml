@@ -31,6 +31,10 @@ spec:
             - "/cloud_sql_proxy" 
             - "-instances=yotta-mlops:europe-west1:group-1=tcp:5432"
             - "-credential_file=/secrets/cloudsql/service_account.json"
+          resources:
+            limits:
+              memory: "10Mi"
+              cpu: "0.1"
           securityContext:
             runAsUser: 2  # non-root user
             allowPrivilegeEscalation: false
@@ -41,6 +45,10 @@ spec:
         - name: pipeline
           image: eu.gcr.io/yotta-mlops/colibrimmo-group-1:__TAG__
           command: ["python", "flask_entry.py"]
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "0.1"
           env:
           - name: ENVIRONMENT
             value: "__BRANCHNAME__"
