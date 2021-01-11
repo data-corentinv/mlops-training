@@ -1,11 +1,79 @@
-image: python:3.8
+image: docker:19
+
+variables:
+  DOCKER_DRIVER: overlay
+
+services:
+  - docker:dind
 
 stages:
   - test
+  - build
+  - push
+  - deploy
 
 test:
+  image: python:3.8
   stage: test
-  script: 
-    - pip install kedro==0.16.6
+  before_script: 
+    - pip install -r src/requirements.txt
     - kedro install
+  script: 
     - kedro test
+  only:
+    - master
+    - staging
+    - develop
+    - merge_requests
+
+build-docker:
+  stage: build
+  variables: 
+    IMAGE_SHA_NAME: eu.gcr.io/yotta-mlops/colibrimmo-group-1:$CI_COMMIT_SHORT_SHA
+    IMAGE_BRANCH_NAME: eu.gcr.io/yotta-mlops/colibrimmo-group-1:$CI_COMMIT_BRANCH
+  before_script:
+    - base64 -d "$GITLAB_SERVICE_ACCOUNT_KEY" | docker login -u _json_key --password-stdin https://eu.gcr.io
+  script: 
+    - docker build . -t $IMAGE_BRANCH_NAME -t $IMAGE_SHA_NAME
+    - docker push $IMAGE_BRANCH_NAME
+    - docker push $IMAGE_SHA_NAME
+  only:
+    - master
+    - staging
+    - develop
+
+pages:
+  image: python:3.8
+  stage: deploy
+  before_script: 
+    - pip install -r src/requirements.txt
+  script:
+    - kedro build-docs
+    - mv docs/build/html public
+  artifacts:
+      paths:
+      - public
+  only:
+    - master
+
+deploy-kube:
+  image: gcr.io/google.com/cloudsdktool/cloud-sdk:322.0.0
+  stage: deploy
+  script:
+    - base64 -d "$GITLAB_SERVICE_ACCOUNT_KEY" > key.json
+    - gcloud auth activate-service-account --key-file=key.json
+    - gcloud config set project yotta-mlops
+    - gcloud config set container/cluster colibrimmo
+    - gcloud config set compute/zone europe-west1-b
+    - gcloud container clusters get-credentials colibrimmo --zone europe-west1-b
+    - sed -i "s/__TAG__/${CI_COMMIT_SHORT_SHA}/g; s/__BRANCHNAME__/${CI_COMMIT_BRANCH}/g" deployment/deployment.yml
+    - sed -i "s/__TAG__/${CI_COMMIT_SHORT_SHA}/g; s/__BRANCHNAME__/${CI_COMMIT_BRANCH}/g" deployment/service.yml
+    - sed -i "s/__TAG__/${CI_COMMIT_SHORT_SHA}/g; s/__BRANCHNAME__/${CI_COMMIT_BRANCH}/g" deployment/data_acquisition.yml
+    - kubectl apply -f ./deployment/deployment.yml
+    - kubectl apply -f ./deployment/service.yml
+    - kubectl apply -f ./deployment/data_acquisition.yml
+  when: manual
+  only: 
+    - stagging
+    - master
+    - develop

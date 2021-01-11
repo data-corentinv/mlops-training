@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: colibrimmo-group-1-__BRANCHNAME__
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: colibrimmo-group-1
+      environment : __BRANCHNAME__
+  template:
+    metadata:
+      labels:
+        name: colibrimmo-group-1
+        environment : __BRANCHNAME__
+    spec:
+      volumes:
+        - name: secret-group-1
+          secret:
+            secretName: secret-group-1
+        - name: conf-group-1-__BRANCHNAME__
+          configMap:
+            name: conf-group-1-__BRANCHNAME__
+        - name: conf-group-1-base
+          configMap:
+            name: conf-group-1-base
+      containers:
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          command: 
+            - "/cloud_sql_proxy" 
+            - "-instances=yotta-mlops:europe-west1:group-1=tcp:5432"
+            - "-credential_file=/secrets/cloudsql/service_account.json"
+          resources:
+            limits:
+              memory: "10Mi"
+              cpu: "0.1"
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          volumeMounts:
+          - name: secret-group-1
+            mountPath: /secrets/cloudsql
+            readOnly: true
+        - name: pipeline
+          image: eu.gcr.io/yotta-mlops/colibrimmo-group-1:__TAG__
+          command: ["python", "flask_entry.py"]
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "0.1"
+          env:
+          - name: ENVIRONMENT
+            value: "__BRANCHNAME__"
+          - name: MLFLOW_TRACKING_URI
+            value: "http://34.77.161.208:5000"
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: "conf/local/service_account.json"
+          ports:
+          - containerPort: 5000
+            protocol: TCP
+          volumeMounts:
+          - name: secret-group-1
+            mountPath: "/home/kedro/conf/local/"
+            readOnly: true
+          - name: conf-group-1-__BRANCHNAME__
+            mountPath: "/home/kedro/conf/__BRANCHNAME__/"
+            readOnly: true
+          - name: conf-group-1-base
+            mountPath: "/home/kedro/conf/base/"
+            readOnly: true

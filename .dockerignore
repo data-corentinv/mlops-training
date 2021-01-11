@@ -1,0 +1,26 @@
+##########################
+# Kedro PROJECT
+
+# ignore Dockerfile and .dockerignore
+Dockerfile
+.dockerignore
+
+# ignore all local configuration
+conf
+!conf/local/.gitkeep
+
+# ignore everything in the following folders
+data
+logs
+notebooks
+references
+results
+mlruns
+mlflow
+great_expectations
+
+# except the following
+!logs/.gitkeep
+!notebooks/.gitkeep
+!references/.gitkeep
+!results/.gitkeep

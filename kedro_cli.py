@@ -29,6 +29,7 @@
 """Command line tools for manipulating a Kedro project.
 Intended to be invoked via `kedro`."""
 import os
+import numpy as np
 from itertools import chain
 from pathlib import Path
 from typing import Dict, Iterable, Tuple
@@ -77,7 +78,7 @@ PARAMS_ARG_HELP = """Specify extra parameters that you want to pass
 to the context initializer. Items must be separated by comma, keys - by colon,
 example: param1:value1,param2:value2. Each parameter is split by the first comma,
 so parameter values are allowed to contain colons, parameter keys are not."""
-
+PARAMS_MLFLOW_RUN = """Specify MLFLOW run parameters."""
 
 def _config_file_callback(ctx, param, value):  # pylint: disable=unused-argument
     """Config file callback, that replaces command line options with config file
@@ -193,6 +194,8 @@ def cli():
 @click.option(
     "--params", type=str, default="", help=PARAMS_ARG_HELP, callback=_split_params
 )
+@click.option("--n_estimators", type=click.INT, default=None, help=PARAMS_MLFLOW_RUN)
+@click.option("--split_train", type=click.FLOAT, default=None, help=PARAMS_MLFLOW_RUN)
 def run(
     tag,
     env,
@@ -207,6 +210,8 @@ def run(
     pipeline,
     config,
     params,
+    n_estimators,
+    split_train
 ):
     """Run the pipeline."""
     if parallel and runner:
@@ -221,7 +226,12 @@ def run(
 
     tag = _get_values_as_tuple(tag) if tag else tag
     node_names = _get_values_as_tuple(node_names) if node_names else node_names
-
+    context = load_context(Path.cwd(), env=env, extra_params=params)
+    params["model"] = context.params['model']
+    if n_estimators:
+        params["model"]["n_estimators"] = n_estimators
+    if split_train:
+        params["model"]["split_train"] = split_train
     context = load_context(Path.cwd(), env=env, extra_params=params)
     context.run(
         tags=tag,
