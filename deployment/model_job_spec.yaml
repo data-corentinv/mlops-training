@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: colibrimmo-g-1
+  namespace: default
+spec:
+  ttlSecondsAfterFinished: 100
+  backoffLimit: 0
+  template:
+    spec:
+      volumes:
+        - name: secret-group-1
+          secret:
+            secretName: secret-group-1
+        - name: conf-group-1
+          configMap:
+            name: conf-group-1
+      containers:
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          sidecar: true
+          command: ["/cloud_sql_proxy", "-instances=yotta-mlops:europe-west1:group-1=tcp:5432", "-credential_file=/secrets/cloudsql/service_account.json"]
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          volumeMounts:
+          - name: secret-group-1
+            mountPath: /secrets/cloudsql
+            readOnly: true
+        - name: colibrimmo-group-1
+          image: eu.gcr.io/yotta-mlops/colibrimmo-group-1:latest
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          command: ["kedro", "run", "--pipeline", "model"]
+          env: 
+          - name: MLFLOW_TRACKING_URI
+            value: "http://34.77.161.208:5000"
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: "conf/local/service_account.json"
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: db-group1
+                key: DB_USER
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: db-group1
+                key: DB_PASS
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: db-group1
+                key: DB_NAME
+          - name: DB_HOST
+            value: "34.78.225.212"
+          volumeMounts:
+          - name: secret-group-1
+            mountPath: "/home/kedro/conf/local/"
+            readOnly: true
+          - name: conf-group-1
+            mountPath: "/home/kedro/conf/base/"
+            readOnly: true
+      restartPolicy: Never
