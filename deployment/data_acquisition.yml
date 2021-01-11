@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: g1-update-data-__BRANCHNAME__
+spec:
+  template:
+    metadata:
+      name: g1-update-data-__BRANCHNAME__
+    spec:
+      volumes:
+        - name: secret-group-1
+          secret:
+            secretName: secret-group-1
+        - name: conf-group-1-__BRANCHNAME__
+          configMap:
+            name: conf-group-1-__BRANCHNAME__
+        - name: conf-group-1-base
+          configMap:
+            name: conf-group-1-base
+      containers:
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          sidecar: true
+          command: 
+            - "/cloud_sql_proxy" 
+            - "-instances=yotta-mlops:europe-west1:group-1=tcp:5432"
+            - "-credential_file=/secrets/cloudsql/service_account.json"
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          volumeMounts:
+          - name: secret-group-1
+            mountPath: /secrets/cloudsql
+            readOnly: true
+        - name: pipeline
+          image: eu.gcr.io/yotta-mlops/colibrimmo-group-1:__TAG__
+          command: ["kedro", "run", "--env", "__BRANCHNAME__"]
+          volumeMounts:
+          - name: secret-group-1
+            mountPath: "/home/kedro/conf/local/"
+            readOnly: true
+          - name: conf-group-1-__BRANCHNAME__
+            mountPath: "/home/kedro/conf/__BRANCHNAME__/"
+            readOnly: true
+          - name: conf-group-1-base
+            mountPath: "/home/kedro/conf/base/"
+            readOnly: true
+      restartPolicy: Never
