@@ -10,13 +10,18 @@ ads:
   load_args: 
     dtype: 
       postal_code: str
-    nrows: 100000
+    nrows: 10000
 
 zones-cities:
   type: pandas.CSVDataSet
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/cities.csv
   load_args: 
+    usecols:
+      - insee_code
+      - name
+      - department_insee_code
+      - population
     nrows: 10000
 
 zones-iris:
@@ -24,23 +29,33 @@ zones-iris:
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/iris.csv
   load_args: 
-    nrows: 10000
+    usecols:
+        - insee_code
+        - name
+        - district_id
+        - city_insee_code
+        - type
+    nrows: 1000
   
 zones-departments:
   type: pandas.CSVDataSet
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/departments.csv
   load_args: 
+    usecols:
+        - insee_code
+        - name
+        - region_insee_code
     dtype: 
       postal_code: str
       region_insee_code: str
+    nrows: 100
 
 zones-insee:
   type: pandas.CSVDataSet
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/insee_postal_code_association_table.csv
   load_args: 
-    nrows: 10000
     dtype: 
       postal_code: str
 
@@ -49,7 +64,7 @@ zones-postal-codes: #postal_code
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/postal_codes.csv
   load_args: 
-    nrows: 10000
+    nrows: 100
     dtype: 
       postal_code: str
 
@@ -58,7 +73,9 @@ zones-regions:
   credentials: gcp_service_account
   filepath: gs://yotta-mlops-data-source/zones/regions.csv
   load_args: 
-    nrows: 10000
+    usecols:
+      - insee_code
+      - name
     dtype: 
       insee_code: str
 

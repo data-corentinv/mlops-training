@@ -59,11 +59,11 @@ $ kubectl create configmap conf-group-1-develop --from-file=conf/develop/catalog
 $ kubectl delete configmap conf-group-1-master
 $ kubectl create configmap conf-group-1-master --from-file=conf/master/catalog.yml --from-file=conf/master/parameters.yml --from-file=conf/master/logging.yml 
 
+$ kubectl delete configmap conf-group-1-staging
 $ kubectl create configmap conf-group-1-staging --from-file=conf/staging/catalog.yml --from-file=conf/staging/parameters.yml --from-file=conf/staging/logging.yml 
 
 --from-file=conf/kubernetes_config.json
 
-__BRANCHNAME__
 
 ```
 
@@ -83,6 +83,8 @@ kubectl apply -f deployment/deployment.yml
 
 kubectl delete -f deployment/deployment_test.yml
 kubectl apply -f deployment/deployment_test.yml
+
+kubectl rollout restart deployment colibrimmo-group-1-staging 
 
 kubectl exec -it colibrimmo-group-1-77fd7d794-pbp4p --container pipeline -- /bin/bash
 kubectl apply -f deployment/service.yml
